@@ -1,0 +1,23 @@
+# luna_pinyin_simp.custom.yaml
+# 最终测试版配置
+
+patch:
+  # === 测试探针 ===
+  # 如果这个配置生效，你的候选框会变成7个候选词一页
+  "menu/page_size": 7
+
+  # === 核心功能 ===
+  # 1. 修改拼音分隔符为 ` (反引号)
+  speller/delimiter: " ` "
+  
+  # 2. 自定义快捷键
+  key_binder/bindings:
+    - { when: has_menu, accept: "[", send: Page_Up }
+    - { when: has_menu, accept: "]", send: Page_Down }
+    - { when: has_menu, accept: ";", send: 2 }
+    - { when: has_menu, accept: "'", send: 3 }
+
+  # 3. 逗号句号翻页
+  punctuator/half_shape:
+    "," : { commit: "，", send: Page_Down }
+    "." : { commit: "。", send: Page_Up }

@@ -1,0 +1,49 @@
+patch:
+  # 语言模型,不好用，权重太高了，动态调频都没法超过它
+  # "grammar/language": wanxiang-lts-zh-hans
+  # "grammar/collocation_max_length": 5
+  # "grammar/collocation_min_length": 3
+
+  # # translator 内加载
+  # "translator/contextual_suggestions": true
+  # "translator/max_homophones": 7
+  # "translator/max_homographs": 7
+
+  "speller/algebra/+":
+    #  - derive_lookup # 如果已经存在这行，请勿重复添加
+    #  - derive/^([a-z]+)[a-z]*$/$1/ # 如果已经存在这行，请勿重复添加
+    - derive/^([zcs])h/$1/ # zh, ch, sh => z, c, s
+    - derive/^([zcs])([^h])/$1h$2/ # z, c, s => zh, ch, sh
+
+    - derive/([aei])n$/$1ng/ # en => eng, in => ing
+    - derive/([aei])ng$/$1n/ # eng => en, ing => in
+
+    - derive/([iu])an$/$lang/ # ian => iang, uan => uang
+    - derive/([iu])ang$/$lan/ # iang => ian, uang => uan
+
+    #- derive/([dtngkhrzcs])o(u|ng)$/$1o/  # zho => zhong|zhou
+    #- derive/ong$/on/                  # zhonguo => zhong guo
+    # - derive/un$/ong$/
+    # - derive/ong$/un$/
+    # ------------------- un / ong / iong 智能模糊音 -------------------
+    # 请删除所有旧的 un/ong 相关规则，替换为以下内容
+
+    # 1. 处理 chun/chong, sun/song 这类情况 (un/ong)
+    # 规则：只要不是 j, q, x, y 开头，就把结尾的 un 和 ong 互换
+    # (?![jqxy]) 是一个“否定先行断言”，意思是“后面不跟着 j, q, x, y”
+    - derive/^((?![jqxy]).*)un$/$1ong/  # chun -> chong
+    - derive/^((?![jqxy]).*)ong$/$1un/  # chong -> chun
+
+    # 2. 处理 jun/jiong, qun/qiong, xun/xiong, yun/yong 这类情况 (ün/iong)
+    # 这部分发音变化有规律，精确写出效果最好
+    - derive/^([jqxy])un$/$1iong/       # jun -> jiong, yun -> yiong(yong)
+    - derive/^([jqxy])iong$/$1un/       # jiong -> jun, yong -> yun
+
+    - derive/l/n/  # n/l 不分
+    - derive/n/l/
+
+    - abbrev/^([zcs]h).+$/$1/ #简拼（zh, ch, sh）
+    - abbrev/^([a-z]).+$/$1/ #简拼（首字母）
+
+
+    - erase/^xx$/ # 首选保留

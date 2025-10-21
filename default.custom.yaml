@@ -1,0 +1,20 @@
+customization:
+  distribution_code_name: Weasel
+  distribution_version: 0.17.4
+  generator: "Rime::SwitcherSettings"
+  modified_time: "Fri Oct 17 21:36:58 2025"
+  rime_version: 1.13.1
+patch:
+  "key_binder/bindings":
+    - {accept: "[", send: Page_Up, when: has_menu}
+    - {accept: "]", send: Page_Down, when: has_menu}
+    - {accept: ",", send: Page_Up, when: has_menu}
+    - {accept: ., send: Page_Down, when: has_menu}
+    - {accept: ";", send: 2, when: has_menu}
+    - {accept: "'", send: 3, when: has_menu}
+  "menu/page_size": 6
+  schema_list:
+    - {schema: rime_mint}
+    - {schema: terra_pinyin}
+    - {schema: melt_eng}
+  "speller/delimiter": " ` "
