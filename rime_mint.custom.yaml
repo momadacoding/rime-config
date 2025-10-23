@@ -39,8 +39,8 @@ patch:
     - derive/^([jqxy])un$/$1iong/       # jun -> jiong, yun -> yiong(yong)
     - derive/^([jqxy])iong$/$1un/       # jiong -> jun, yong -> yun
 
-    - derive/l/n/  # n/l 不分
-    - derive/n/l/
+    - derive/^l/n/  # n/l 不分
+    - derive/^n/l/
 
     - abbrev/^([zcs]h).+$/$1/ #简拼（zh, ch, sh）
     - abbrev/^([a-z]).+$/$1/ #简拼（首字母）
