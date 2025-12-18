@@ -9,6 +9,14 @@ patch:
   # "translator/max_homophones": 7
   # "translator/max_homographs": 7
 
+  # 设置「薄荷拼音-全拼输入」的词典，使用 rime_mint.custom.dict.yaml 文件
+  translator/dictionary: rime_mint.custom
+
+  # https://github.com/rime/home/issues/2033
+  # "translator/dictionary/+": sougou
+
+  "recognizer/patterns/gregorian_to_lunar": ""
+
   "speller/algebra/+":
     #  - derive_lookup # 如果已经存在这行，请勿重复添加
     #  - derive/^([a-z]+)[a-z]*$/$1/ # 如果已经存在这行，请勿重复添加
@@ -18,13 +26,9 @@ patch:
     - derive/([aei])n$/$1ng/ # en => eng, in => ing
     - derive/([aei])ng$/$1n/ # eng => en, ing => in
 
-    - derive/([iu])an$/$lang/ # ian => iang, uan => uang
-    - derive/([iu])ang$/$lan/ # iang => ian, uang => uan
+    - derive/([iu])an$/$1ang/ # ian => iang, uan => uang
+    - derive/([iu])ang$/$1an/ # iang => ian, uang => uan
 
-    #- derive/([dtngkhrzcs])o(u|ng)$/$1o/  # zho => zhong|zhou
-    #- derive/ong$/on/                  # zhonguo => zhong guo
-    # - derive/un$/ong$/
-    # - derive/ong$/un$/
     # ------------------- un / ong / iong 智能模糊音 -------------------
     # 请删除所有旧的 un/ong 相关规则，替换为以下内容
 
@@ -39,8 +43,8 @@ patch:
     - derive/^([jqxy])un$/$1iong/       # jun -> jiong, yun -> yiong(yong)
     - derive/^([jqxy])iong$/$1un/       # jiong -> jun, yong -> yun
 
-    - derive/^l/n/  # n/l 不分
-    - derive/^n/l/
+    - derive/^n(.+)$/l$1/  # n/l 不分，但仅在后面有其他字符时生效（保护 n->你）
+    - derive/^l(.+)$/n$1/  # l/n 不分，但仅在后面有其他字符时生效（保护 l->了）
 
     - abbrev/^([zcs]h).+$/$1/ #简拼（zh, ch, sh）
     - abbrev/^([a-z]).+$/$1/ #简拼（首字母）

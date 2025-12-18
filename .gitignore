@@ -8,6 +8,9 @@ installation.yaml
 # 部署生成的文件
 build
 *.userdb
+*.userdb.txt
+sougou.dict.yaml
+custom_phrase.txt
 
 # 自定义文件
 #*.custom.yaml

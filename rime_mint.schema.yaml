@@ -115,7 +115,7 @@ emoji_suggestion:
 # 『留白』 不设置该选项，使用 reduce_english_filter 内全局设置内容
 # （匹配的是编码，不是单词）
 reduce_english_filter:
-  mode: all  # all | none | custom | 『留白』
+  mode: none  # all | none | custom | 『留白』
   idx: 2        # 降低到第 idx 个位置
   # 自定义的单词列表，示例列表没有降低部分常用单词，如 and cat mail Mac but bad shit ……
   words: [aid, ann,
@@ -359,4 +359,3 @@ key_binder:
 
   # 候选词个数
   page_size: 6
-
