@@ -38,10 +38,14 @@ patch:
     - derive/^((?![jqxy]).*)un$/$1ong/  # chun -> chong
     - derive/^((?![jqxy]).*)ong$/$1un/  # chong -> chun
 
-    # 2. 处理 jun/jiong, qun/qiong, xun/xiong, yun/yong 这类情况 (ün/iong)
-    # 这部分发音变化有规律，精确写出效果最好
-    - derive/^([jqxy])un$/$1iong/       # jun -> jiong, yun -> yiong(yong)
-    - derive/^([jqxy])iong$/$1un/       # jiong -> jun, yong -> yun
+    # 2. 处理 jun/jiong, qun/qiong, xun/xiong 这类情况 (ün/iong)
+    - derive/^([jqx])un$/$1iong/        # jun -> jiong
+    - derive/^([jqx])iong$/$1un/        # jiong -> jun
+    # 3. 单独处理 yun/yong，兼容多音节连续输入（如 yunjiu -> yongjiu）
+    - derive/^yun$/yong/
+    - derive/^yong$/yun/
+    - derive/^yun([a-z].*)$/yong$1/
+    - derive/^yong([a-z].*)$/yun$1/
 
     - derive/^n(.+)$/l$1/  # n/l 不分，但仅在后面有其他字符时生效（保护 n->你）
     - derive/^l(.+)$/n$1/  # l/n 不分，但仅在后面有其他字符时生效（保护 l->了）
