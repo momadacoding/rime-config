@@ -10,6 +10,12 @@ local tone_map = {
     ["ü"] = "v",
 }
 
+function M.init(env)
+    local config = env.engine.schema.config
+    env.name_space = env.name_space:gsub('^*', '')
+    M.bonus_ratio = tonumber(config:get_string(env.name_space .. '/bonus_ratio')) or 0.35
+end
+
 local function normalize_spelling(text)
     if not text or text == "" then
         return ""
@@ -23,6 +29,14 @@ local function normalize_spelling(text)
     return text:gsub("[^a-zv]", "")
 end
 
+local function boost_quality(cand, ratio)
+    local genuine = cand.get_genuine and cand:get_genuine() or cand
+    local quality = genuine.quality or cand.quality or 0
+    local base = math.max(math.abs(quality), 1.0)
+    genuine.quality = quality + base * ratio
+    return cand
+end
+
 function M.func(input, env)
     local code = normalize_spelling(env.engine.context.input)
     if code == "" then
@@ -32,39 +46,38 @@ function M.func(input, env)
         return
     end
 
-    local exact_cands = {}
-    local fuzzy_cands = {}
+    local items = {}
     local has_exact = false
     local has_fuzzy = false
 
     for cand in input:iter() do
         local spelling = normalize_spelling(cand.comment)
-        if spelling ~= "" and spelling == code then
+        local exact = spelling ~= "" and spelling == code
+        if exact then
             has_exact = true
-            table.insert(exact_cands, cand)
-        else
-            if spelling ~= "" then
-                has_fuzzy = true
-            end
-            table.insert(fuzzy_cands, cand)
+        elseif spelling ~= "" then
+            has_fuzzy = true
         end
+
+        table.insert(items, {
+            cand = cand,
+            exact = exact,
+        })
     end
 
     if not (has_exact and has_fuzzy) then
-        for _, cand in ipairs(exact_cands) do
-            yield(cand)
-        end
-        for _, cand in ipairs(fuzzy_cands) do
-            yield(cand)
+        for _, item in ipairs(items) do
+            yield(item.cand)
         end
         return
     end
 
-    for _, cand in ipairs(exact_cands) do
-        yield(cand)
-    end
-    for _, cand in ipairs(fuzzy_cands) do
-        yield(cand)
+    for _, item in ipairs(items) do
+        if item.exact then
+            yield(boost_quality(item.cand, M.bonus_ratio))
+        else
+            yield(item.cand)
+        end
     end
 end
 
