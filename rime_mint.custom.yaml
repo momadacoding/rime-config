@@ -4,6 +4,15 @@ patch:
   # "grammar/collocation_max_length": 5
   # "grammar/collocation_min_length": 3
 
+  "engine/filters":
+    - lua_filter@*exact_match_first_filter
+    - lua_filter@*corrector_filter
+    - lua_filter@*super_preedit
+    - lua_filter@*autocap_filter
+    - simplifier@emoji_suggestion
+    - simplifier@transcription_cc
+    - lua_filter@*reduce_english_filter
+    - uniquifier
   "translator/initial_quality": 1.0
   "melt_eng/initial_quality": 1.0
 
@@ -58,3 +67,4 @@ patch:
 
 
     - erase/^xx$/ # 首选保留
+
